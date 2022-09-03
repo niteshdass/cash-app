@@ -43,7 +43,10 @@
             <button style="margin-top: -40px;" type="button" class="btn btn-labeled btn-primay app" data-toggle="modal"
                 data-target="#myModal">
                 <span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span></button>
-            <article class="">
+            <div style="margin: 135px" v-if="loading">
+                <Loader />
+            </div>
+            <article v-else class="">
                 <section class="list">
                     <div v-if="data.length > 0" class="list-item" v-for="(item, index) in data"
                         :style="'--order:' + index + ';'">
@@ -60,7 +63,11 @@
                             </div>
                             <p>{{ item.note }}</p>
                         </div>
-                        <button style="border: none; background:white" @click="deleteBudget(item)"><i style="color: #1b1796; font-size: 20px" class="glyphicon glyphicon-trash"></i></button>
+                        <button style="border: none; background:white" @click="deleteBudget(item)"><i
+                                style="color: #1b1796; font-size: 20px" class="glyphicon glyphicon-trash"></i></button>
+                    </div>
+                    <div v-else>
+                        <h4>Transaction not found !</h4>
                     </div>
                 </section>
             </article>
@@ -74,11 +81,21 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form class="form-inline" action="/action_page.php">
-                                <input type="email" class="form-control my-form" placeholder="Enter email" id="email">
-                                <input type="password" class="form-control my-form" placeholder="Enter password"
-                                    id="pwd">
-                                <button type="submit" class="btn btn-primary my-button">Submit</button>
+                            <form class="form-inline">
+                                <input v-model="purpose" type="text" class="form-control my-form"
+                                    placeholder="Enter purpose">
+                                <input v-model="amount" type="number" class="form-control my-form" placeholder="Amount">
+                                <div class="form-group">
+                                    <label></label>
+                                    <select v-model="budget_type" class="select" id="sel1" placeholder="Amount">
+                                        <option value="" selected>Transaction type</option>
+                                        <option value="debit">Debit</option>
+                                        <option value="credit">Credit</option>
+                                    </select>
+                                </div>
+                                <input v-model="note" type="text" class="form-control my-form" placeholder="Note">
+                                <button @click="addTransaction" class="btn btn-primary my-button"
+                                    data-dismiss="modal">Submit</button>
                             </form>
                         </div>
 
@@ -99,13 +116,11 @@
 import { ref } from 'vue'
 import NavBar from '../common/NavBar.vue';
 import axios from 'axios'
-import BarChart from '../common/ChartBar.vue'
-import PieChart from '../common/PiChart.js'
-import Pie from '../common/Pie.vue';
 import { data } from 'browserslist';
+import Loader from '../common/Loader.vue';
 
 export default {
-    components: { BarChart, NavBar, PieChart, Pie },
+    components: { NavBar, Loader },
     data() {
         return {
             filter: {
@@ -114,20 +129,120 @@ export default {
             },
             data: [],
             filterRender: false,
+            loading: true,
+            amount: '',
+            purpose: '',
+            budget_type: '',
+            date: this.formatDate(),
+            note: '',
+            user_id: '62b88f52d21490416a74fc91'
         };
     },
+    // beforeRouteEnter(to, from, next) {
+    //     next((vm) => {
+    //         vm.from = from;
+    //     });
+    //     console
+    // },
     methods: {
+        formatDate() {
+            var d = new Date(),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        },
         filterHandler() {
+            if (this.filter.year === 'total') {
+                let url = `https://my-cash-app.herokuapp.com/budget/62b88f52d21490416a74fc91`;
+                this.getAllTransection(url);
+                return;
+            }
             let month = parseInt(this.filter.month, 10);
             let year = parseInt(this.filter.year, 10);
+
             if (month > 0 && year > 0) {
                 let url = `https://my-cash-app.herokuapp.com/budget/month/62b88f52d21490416a74fc91/${month}/${year}`;
                 this.getAllTransection(url)
             }
         },
         async deleteBudget(data) {
-            await axios.delete(`https://my-cash-app.herokuapp.com/budget/${data._id}`);
-            this.getAllTransection();
+            this.loading = true;
+            let res = await axios.delete(`https://my-cash-app.herokuapp.com/budget/${data._id}`);
+            if (res?.data?.message) {
+                this.loading = false;
+                this.getAllTransection();
+                // this.$swal.fire(
+                //     'Delete',
+                //     'Successfully deleted the budget item!',
+                //     'success'
+                // );
+            } else {
+                this.$swal.fire(
+                    {
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    }
+                );
+            }
+        },
+        async addTransaction() {
+            const d = new Date();
+            let year = d.getFullYear();
+            let month = d.getMonth() + 1;
+            const budget = {
+                amount: this.amount,
+                purpose: this.purpose,
+                budget_type: this.budget_type,
+                date: this.date,
+                note: this.note,
+                user_id: '62b88f52d21490416a74fc91',
+                month,
+                year
+            }
+            try {
+                if (this.amount && this.purpose && this.budget_type && this.note) {
+                    this.loading = true;
+                    const result = await axios.post("https://my-cash-app.herokuapp.com/budget/create", budget);
+                    if (result) {
+                        this.loading = false;
+                        // this.successMessage('Transaction', 'Transaction add successfully')
+                        this.getAllTransection();
+                    } else {
+                        this.loading = false;
+                        this.errorMessage();
+                    }
+                } else {
+                    this.errorMessage('Somthing wents wrong');
+                }
+            } catch (err) {
+                this.loading = false;
+                this.errorMessage('Somthing wents wrong');
+            }
+
+        },
+        errorMessage(message = 'All fields are required!') {
+            this.$swal.fire(
+                {
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: message,
+                }
+            );
+        },
+        successMessage(title = 'Delete', message = 'Successfully deleted the budget item!') {
+            this.$swal.fire(
+                title,
+                message,
+                'success'
+            );
         },
         cancelFilter() {
             this.filter.month = '';
@@ -139,15 +254,22 @@ export default {
             this.filterRender = !this.filterRender;
         },
         async getAllTransection(customUrl = '') {
+            const d = new Date();
+            let year = d.getFullYear();
+            let month = d.getMonth() + 1;
+
             let that = this;
-            let url = customUrl.length > 1 ? customUrl : `https://my-cash-app.herokuapp.com/budget/62b88f52d21490416a74fc91`;
+            that.loading = true;
+            let url = customUrl.length > 1 ? customUrl : `https://my-cash-app.herokuapp.com/budget/month/${this.user_id}/${month}/${year}`;
             await axios.get(url)
                 .then(async function (response) {
                     that.data = response.data.reverse();
+                    that.loading = false;
                     // getEachMonthCostTotal(response.data);
                     // setLoading(false);
                 }).catch(function (error) {
                     console.log(error)
+                    that.loading = false;
                 })
                 .then(function () {
                 });
@@ -159,11 +281,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .select-box {
     display: inline-block;
-    border-radius: 10px;
-    box-shadow: 3px 2px 5px #FF7519;
+    border-radius: 2px;
+    box-shadow: 1px 4px 4px #FF7519;
     margin-left: 18px;
     max-height: 38px;
 }
@@ -174,7 +296,19 @@ export default {
     padding: 1rem 2rem;
     color: #FF7519;
     border: none;
+    font-size: medium;
 
+}
+
+.select {
+    width: 325px;
+    margin-left: 0px;
+    padding: 15px;
+    font-size: 18px;
+    background-color: #ecf0f3;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
 }
 
 .container {
@@ -284,4 +418,16 @@ section.list .list-item {
     border-radius: 15px;
     box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
 }
+
+select:focus {
+    outline: none;
+}
 </style>
+
+
+
+
+
+
+
+

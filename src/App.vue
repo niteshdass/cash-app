@@ -130,7 +130,7 @@ img {
     background-color: var(--container-color);
     box-shadow: 0 -1px 12px hsla(var(--hue), var(--sat), 15%, 0.15);
     width: 100%;
-    height: 4rem;
+    height: 6rem;
     padding: 0 1rem;
     display: grid;
     align-content: center;
@@ -157,7 +157,7 @@ img {
 }
 
 .nav__name {
-  font-size: var(--tiny-font-size);
+  font-size: 12px;
   /* display: none;*/ /* Minimalist design, hidden labels */
 }
 

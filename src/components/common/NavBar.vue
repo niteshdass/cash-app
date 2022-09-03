@@ -1,7 +1,7 @@
 <template>
      <header style="background-color: #f2f4f5;" class="header" id="header">
         <nav class="nav container">
-            <a  style="margin-left: -114px;" href="#" class="nav__logo"> <i class='bx bx-left-arrow-alt nav__icon'></i></a>
+            <!-- <a  style="margin-left: -114px;" href="#" class="nav__logo"> <i class='bx bx-left-arrow-alt nav__icon'></i></a> -->
 
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">

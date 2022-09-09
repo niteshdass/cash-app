@@ -109,7 +109,7 @@ export default {
                     let rest_date = days - d.getDate();
                    setTimeout(() => {
                     let targetAvg = (newLimit - this.expenseAmount)/rest_date;
-                    this.perDayCost = targetAvg;
+                    this.perDayCost = Math.trunc(targetAvg);
                    }, 1000)
         }
     },

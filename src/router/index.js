@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Home from '../components/home/index.vue'
 import Transaction from '../components/transections/index.vue'
+import Borrower from '../components/borrower/index.vue'
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: Transaction
+  },
+  {
+    path: '/borrower',
+    name: 'borrower',
+    component: Borrower
   }
 ]
 

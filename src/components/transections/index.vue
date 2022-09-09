@@ -173,25 +173,32 @@ export default {
             }
         },
         async deleteBudget(data) {
-            this.loading = true;
-            let res = await axios.delete(`https://my-cash-app.herokuapp.com/budget/${data._id}`);
-            if (res?.data?.message) {
-                this.loading = false;
-                this.getAllTransection();
-                // this.$swal.fire(
-                //     'Delete',
-                //     'Successfully deleted the budget item!',
-                //     'success'
-                // );
-            } else {
-                this.$swal.fire(
-                    {
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
+
+            this.$swal.fire({
+                icon: 'warning',
+                title: 'Delete',
+                text: 'Are you sure delete the transaction?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+            }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    this.loading = true;
+                    let res = await axios.delete(`https://my-cash-app.herokuapp.com/budget/${data._id}`);
+                    if (res?.data?.message) {
+                        this.loading = false;
+                        this.getAllTransection();
+                    } else {
+                        this.$swal.fire(
+                            {
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            }
+                        );
                     }
-                );
-            }
+                }
+            })
         },
         async addTransaction() {
             const d = new Date();
@@ -327,6 +334,7 @@ article {
     box-shadow: 0 2px 12px 3px rgba(8, 8, 8, 0.15);
     border-radius: 0.5em;
     overflow: hidden;
+    margin-bottom: 100px;
 }
 
 section.header {
@@ -353,12 +361,14 @@ section.list .list-item {
 }
 
 .list-item h4 {
-    font-size: 1.2em;
+    font-size: 1.6em;
+    font-weight: 900;
 }
 
 .list-item h4,
 .list-item p {
     margin: 0 0 0.3em 0;
+    font-size: 1.4em;
 }
 
 :is(.list-item) h4,

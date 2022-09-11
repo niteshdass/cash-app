@@ -123,7 +123,6 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 }).then(async (result) => {
-                /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         this.loading = true;
                         let that = this;
@@ -277,7 +276,6 @@ export default {
     },
 };
 </script>
-
 <style scoped>
 .notes {
     width: 100%;
@@ -288,149 +286,5 @@ export default {
     border: 1px solid #ddd;
     text-align: center;
     box-shadow: 5px 5px 10px #ddd inset, -5px -5px 10px #ddd inset;
-}
-
-.select-box {
-    display: inline-block;
-    border-radius: 2px;
-    box-shadow: 1px 4px 4px #FF7519;
-    margin-left: 18px;
-    max-height: 38px;
-}
-
-.fa {
-    font-family: 'Lato', 'Font Awesome 5 Free', 'Font Awesome 5 Brands';
-    font-weight: 900;
-    padding: 1rem 2rem;
-    color: #FF7519;
-    border: none;
-    font-size: medium;
-
-}
-
-.select {
-    width: 325px;
-    margin-left: 0px;
-    padding: 15px;
-    font-size: 18px;
-    background-color: #ecf0f3;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-}
-
-.container {
-    color: #114273;
-    font-family: sans-serif;
-}
-
-.app {
-    margin-top: 0px;
-    margin-bottom: 10px;
-    margin-left: 280px;
-}
-
-article {
-    background-color: #fff;
-    box-shadow: 0 2px 12px 3px rgba(8, 8, 8, 0.15);
-    border-radius: 0.5em;
-    overflow: hidden;
-    margin-bottom: 100px;
-}
-
-section.header {
-    text-align: center;
-    padding: 1em;
-    background-color: #2260a0;
-    color: #fff;
-}
-
-section.list {
-    display: flex;
-    flex-flow: row wrap;
-    padding: 1em;
-}
-
-section.list .list-item {
-    flex: 0 1 320px;
-    /* 	border-bottom: 1px solid #ddd; */
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    padding: 0.5em;
-    gap: 1.4em;
-}
-
-.list-item h4 {
-    font-size: 1.8em;
-    font-weight: 900;
-}
-
-.list-item h4,
-.list-item p {
-    margin: 0 0 0.3em 0;
-    font-size: 1.6em;
-}
-
-:is(.list-item) h4,
-:is(.list-item) p {
-    margin: 0 0 0.3em 0;
-}
-
-section.list .list-item .thumbnail {
-    flex: 0 1 52px;
-    font-size: 20px;
-    text-align: center;
-    color: white;
-    background-color: #FF7519;
-}
-
-section.list .list-item .item-body {
-    flex: 0 1 calc(100% - 52px);
-}
-
-/* Animation styles */
-
-section.list .list-item {
-    opacity: 0;
-    animation: stagger ease-in 0.4s forwards 1;
-    animation-delay: calc(var(--order) * 0.3s);
-}
-
-@keyframes stagger {
-    from {
-        opacity: 0;
-        transform: translateY(80px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-}
-
-.my-form {
-    max-width: 350px;
-    min-height: 40px;
-    margin: 20px;
-    margin-left: 0px;
-    padding: 25px;
-    font-size: 18px;
-    background-color: #ecf0f3;
-    border-radius: 15px;
-    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-}
-
-.my-button {
-    width: 100%;
-    height: 50px;
-    background-color: #FF7519;
-    margin-top: 30px;
-    border-radius: 15px;
-    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-}
-
-select:focus {
-    outline: none;
 }
 </style>

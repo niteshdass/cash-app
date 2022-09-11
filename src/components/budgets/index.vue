@@ -3,19 +3,35 @@
         <NavBar></NavBar>
         <button type="button" class="btn btn-labeled btn-primay app" data-toggle="modal" data-target="#myModal">
             <span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span></button>
-        <article class="">
-            <section class="list">
-                <div class="list-item" v-for="(item, index) in list" :style="'--order:' + index + ';'">
-                    <div class="thumbnail">
-                        <i class="glyphicon glyphicon-plus"></i>
+        <Loader style="margin: 40%" v-if="loading"></Loader>
+        <div v-else>
+            <h2 style="font-size:1.5rem ; font-weight: 700;">Budget limit's</h2>
+            <article class="">
+                <section class="list">
+                    <div class="list-item" v-for="(item, index) in list" :style="'--order:' + index + ';'">
+                    <div style="display: flex; width: 95%; padding-top: 16px;">
+                            <div class="thumbnail">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </div>
+                            <div class="item-body" style="display:contents">
+                                <h3 style="margin: 0px 5px">{{ months[item?.month - 1]}}</h3>
+                                <h4 style="padding: 10px 5px">{{ item?.target_ammount}} tk</h4>
+                            </div>
+                        </div>
+                        <button
+                            style="border: none; background:white; right: 0;"
+                            @click="deleteData(item?.target_ammount, item?.month)"
+                            data-toggle="modal" data-target="#myModal"
+                        >
+                            <i style="color: #1b1796; font-size: 20px"
+                                class="glyphicon glyphicon-edit">
+                            </i>
+                        </button>
                     </div>
-                    <div class="item-body">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.desc }}</p>
-                    </div>
-                </div>
-            </section>
-        </article>
+
+                </section>
+            </article>
+        </div>
         <div class="modal" id="myModal" style="border-radius: 10px">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -26,10 +42,16 @@
 
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <form class="form-inline" action="/action_page.php">
-                            <input type="email" class="form-control my-form" placeholder="Enter email" id="email">
-                            <input type="password" class="form-control my-form" placeholder="Enter password" id="pwd">
-                            <button type="submit" class="btn btn-primary my-button">Submit</button>
+                        <form class="form-inline">
+                            <input v-model="target_ammount" type="number" class="form-control my-form" placeholder="Enter your amount limit" id="email">
+                            <div class="form-group">
+                                <label></label>
+                                <select style=" width: 305px;" v-model="month" class="select" id="sel1">
+                                    <option value="" selected>Select month</option>
+                                    <option v-for="(item, index) in months" :value="index + 1">{{ item }}</option>
+                                </select>
+                            </div>
+                            <button @click="submitData" data-dismiss="modal" class="btn btn-primary my-button">Submit</button>
                         </form>
                     </div>
 
@@ -44,182 +66,128 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 import NavBar from '../common/NavBar.vue';
+import Loader from '../common/Loader.vue';
 export default {
     components: {
-        NavBar
+        NavBar,
+        Loader
     },
     data() {
         return {
-            list: [
-                {
-                    title: "Pepe Raina",
-                    desc: "Goal Keeper Center attacking midfielder Center attacking midfielder",
-                    image: 'https://via.placeholder.com/52/7C83FD/FFFFFF?text=GK'
-                },
-                {
-                    title: "Peter Cech",
-                    desc: "Goal Keeper",
-                    image: 'https://via.placeholder.com/52/96BAFF/FFFFFF?text=GK'
-                },
-                {
-                    title: "Luka Modric",
-                    desc: "Center attacking midfielder",
-                    image: 'https://via.placeholder.com/52/7DEDFF/FFFFFF?text=CF'
-                },
-                {
-                    title: "Andres Iniesta",
-                    desc: "Center midfielder",
-                    image: 'https://via.placeholder.com/52/C490E4/FFFFFF?text=CM'
-                },
-                {
-                    title: "Pepe Raina",
-                    desc: "Goal Keeper",
-                    image: 'https://via.placeholder.com/52/7C83FD/FFFFFF?text=GK'
-                },
-                {
-                    title: "Peter Cech",
-                    desc: "Goal Keeper",
-                    image: 'https://via.placeholder.com/52/96BAFF/FFFFFF?text=GK'
-                },
-                {
-                    title: "Luka Modric",
-                    desc: "Center attacking midfielder Center attacking midfielder Center attacking midfielder",
-                    image: 'https://via.placeholder.com/52/7DEDFF/FFFFFF?text=CF'
-                },
-                {
-                    title: "Andres Iniesta",
-                    desc: "Center midfielder",
-                    image: 'https://via.placeholder.com/52/C490E4/FFFFFF?text=CM'
-                },
-                {
-                    title: "Pepe Raina",
-                    desc: "Goal Keeper",
-                    image: 'https://via.placeholder.com/52/7C83FD/FFFFFF?text=GK'
-                },
-                {
-                    title: "Peter Cech",
-                    desc: "Goal Keeper",
-                    image: 'https://via.placeholder.com/52/96BAFF/FFFFFF?text=GK'
-                },
-                {
-                    title: "Luka Modric",
-                    desc: "Center attacking midfielder",
-                    image: 'https://via.placeholder.com/52/7DEDFF/FFFFFF?text=CF'
-                },
-                {
-                    title: "Andres Iniesta",
-                    desc: "Center midfielder",
-                    image: 'https://via.placeholder.com/52/C490E4/FFFFFF?text=CM'
-                },
-            ]
+            list: [],
+            loading: true,
+            user_id: '62b88f52d21490416a74fc91',
+            target_ammount: '',
+            month: 0,
+            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         }
+    },
+    methods: {
+        errorMessage(message = 'All fields are required!') {
+            this.$swal.fire(
+                {
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: message,
+                }
+            );
+        },
+        async deleteData (amount, month) {
+            this.target_ammount = amount;
+            this.month = month
+
+            // try {
+            //     this.$swal.fire({
+            //     icon: 'warning',
+            //     title: 'Delete',
+            //     text: 'Are you sure delete the budget limit?',
+            //     showCancelButton: true,
+            //     confirmButtonText: 'Delete',
+            //     }).then(async (result) => {
+            //         if (result.isConfirmed) {
+            //             this.loading = true;
+            //             let that = this;
+            //             await axios.delete(`https://my-cash-app.herokuapp.com/loan/${id}`);
+            //             that.getLimitData();
+            //         }
+            //     })
+            // } catch {
+            //     this.loading = false;
+            //     this.errorMessage('Somethings went wrong!')
+            // }
+        },
+        async submitData () {
+          try {
+            const d = new Date();
+            let year = d.getFullYear();
+            let month = d.getMonth() + 1;
+            if (this.target_ammount > 0 && this.month > 0) {
+                this.loading = true;
+                let that = this;
+                let target = {
+                target_ammount: this.target_ammount,
+                month: this.month,
+                year,
+                user_id: this.user_id
+            }
+            const result = await axios.post("https://my-cash-app.herokuapp.com/target/", target);
+            if (result) {
+                that.loading = false;
+                this.target_ammount = '';
+                this.month = month;
+                that.getLimitData()
+
+            } else {
+                this.errorMessage('Somethings went wrong!')
+            }
+
+            } else {
+                this.errorMessage()
+            }
+
+          } catch {
+              this.errorMessage('Somethings went wrong!')
+          }
+        },
+        async getLimitData() {
+            try {
+                let that = this;
+                this.loading = true;
+                await axios.get(`https://my-cash-app.herokuapp.com/target/${this.user_id}`)
+                    .then(async function (response) {
+                        that.loading = false;
+                        that.list = response?.data;
+                        // setMonthTarget(response?.data?.reverse());
+                    }).catch(function (error) {
+                        this.loading = false;
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+            } catch {
+                this.loading = false;
+            }
+        }
+    },
+    mounted() {
+        this.getLimitData();
+        const d = new Date();
+        let month = d.getMonth() + 1;
+        this.month = month;
     }
 }
 </script>
 
-<style>
-.container {
-    color: #114273;
-    font-family: sans-serif;
-}
-
-.app {
-    margin-top: 50px;
-    margin-bottom: 10px;
-    margin-left: 280px;
-}
-
-article {
-    background-color: #fff;
-    box-shadow: 0 2px 12px 3px rgba(8, 8, 8, 0.15);
-    border-radius: 0.5em;
-    overflow: hidden;
-}
-
-section.header {
-    text-align: center;
-    padding: 1em;
-    background-color: #2260a0;
-    color: #fff;
-}
-
-section.list {
-    display: flex;
-    flex-flow: row wrap;
-    padding: 1em;
-}
-
-section.list .list-item {
-    flex: 0 1 320px;
-    /* 	border-bottom: 1px solid #ddd; */
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    padding: 0.5em;
-    gap: 1.4em;
-}
-
-.list-item h4 {
-    font-size: 1.2em;
-}
-
-.list-item h4,
-.list-item p {
-    margin: 0 0 0.3em 0;
-}
-
-:is(.list-item) h4,
-:is(.list-item) p {
-    margin: 0 0 0.3em 0;
-}
-
-section.list .list-item .thumbnail {
-    flex: 0 1 52px;
-    font-size: 20px;
-    text-align: center;
-    color: white;
-    background-color: #FF7519;
-}
-
-section.list .list-item .item-body {
-    flex: 0 1 calc(100% - 52px);
-}
-
-/* Animation styles */
-
-section.list .list-item {
-    opacity: 0;
-    animation: stagger ease-in 0.4s forwards 1;
-    animation-delay: calc(var(--order) * 0.3s);
-}
-
-@keyframes stagger {
-    from {
-        opacity: 0;
-        transform: translateY(80px);
+<style scoped>
+    .btn-labeled {
+        margin-top: 10px;
     }
-
-    to {
-        opacity: 1;
-        transform: translateY(0px);
+    @media screen and (min-width: 576px) {
+        .btn-labeled {
+        margin-top: 50px;
+        margin-left: 320px;
     }
-}
-.my-form {
-    max-width: 350px;
-    min-height: 40px;
-    margin: 20px;
-    margin-left: 0px;
-    padding: 25px;
-    font-size: 18px;
-    background-color: #ecf0f3;
-    border-radius: 15px;
-    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-}
-.my-button {
-    width: 100%; height: 50px; background-color: #FF7519;
-    margin-top: 30px;
-    border-radius: 15px;
-    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
 }
 </style>

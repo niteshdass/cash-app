@@ -82,8 +82,13 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <form class="form-inline">
-                                <input v-model="purpose" type="text" class="form-control my-form"
-                                    placeholder="Enter purpose">
+                                <div class="form-group">
+                                    <label></label>
+                                    <select v-model="purpose" class="select" id="sel1" placeholder="Amount">
+                                        <option value="" selected>Enter purpose</option>
+                                        <option v-for="(item, index) in purpose_data" :value="item">{{ item }}</option>
+                                    </select>
+                                </div>
                                 <input v-model="amount" type="number" class="form-control my-form" placeholder="Amount">
                                 <div class="form-group">
                                     <label></label>
@@ -135,7 +140,8 @@ export default {
             budget_type: '',
             date: this.formatDate(),
             note: '',
-            user_id: '62b88f52d21490416a74fc91'
+            user_id: '62b88f52d21490416a74fc91',
+            purpose_data: []
         };
     },
     // beforeRouteEnter(to, from, next) {
@@ -158,6 +164,34 @@ export default {
 
             return [year, month, day].join('-');
         },
+        prepareCategoryData(data, that) {
+            let loandata = [];
+            data?.map(item => {
+                if (item?.slug === "cash") {
+                    loandata.push(item);
+                }
+            })
+            loandata?.map((item) => {
+                that.purpose_data.push(item?.name)
+            })
+        },
+        async getPurpose() {
+            this.loading = true;
+            let that = this;
+            await axios.get(`https://my-cash-app.herokuapp.com/category/${this.user_id}`)
+                .then(async function (response) {
+                    response?.data && (
+                        that.prepareCategoryData(response?.data, that)
+                    );
+                    that.loading = false;
+                }).catch(function (error) {
+                    // handle error
+                    that.loading = false;
+                })
+                .then(function () {
+                    // always executed
+                });
+        },
         filterHandler() {
             if (this.filter.year === 'total') {
                 let url = `https://my-cash-app.herokuapp.com/budget/62b88f52d21490416a74fc91`;
@@ -173,7 +207,6 @@ export default {
             }
         },
         async deleteBudget(data) {
-
             this.$swal.fire({
                 icon: 'warning',
                 title: 'Delete',
@@ -283,12 +316,13 @@ export default {
         }
     },
     mounted() {
-        this.getAllTransection()
+        this.getAllTransection();
+        this.getPurpose()
     },
 };
 </script>
 
-<style scoped>
+<style>
 .select-box {
     display: inline-block;
     border-radius: 2px;
@@ -308,7 +342,7 @@ export default {
 }
 
 .select {
-    width: 325px;
+    width: 308px;
     margin-left: 0px;
     padding: 15px;
     font-size: 18px;
@@ -358,6 +392,7 @@ section.list .list-item {
     align-items: center;
     padding: 0.5em;
     gap: 1.4em;
+    border-bottom: 1px solid #f1f2f4;
 }
 
 .list-item h4 {

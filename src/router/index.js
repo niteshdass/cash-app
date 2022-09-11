@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import Home from '../components/home/index.vue'
 import Transaction from '../components/transections/index.vue'
 import Borrower from '../components/borrower/index.vue'
+import Budget from '../components/budgets/index.vue'
+import Settings from '../components/settings/index.vue'
 
 const routes = [
   {
@@ -22,7 +24,18 @@ const routes = [
     path: '/borrower',
     name: 'borrower',
     component: Borrower
-  }
+  },
+  {
+    path: '/budgets',
+    name: 'budgets',
+    component: Budget
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings
+  },
+
 ]
 
 const router = createRouter({

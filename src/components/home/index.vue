@@ -94,7 +94,7 @@ export default {
             expenseAmount: 0,
             totalLabels: ['Earn', 'Cost', 'Save'],
             labels: [],
-            userId: '62b88f52d21490416a74fc91',
+            userId: localStorage.getItem("id"),
             filterRender: false,
             limit: 0,
             colorArray: ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
@@ -223,8 +223,12 @@ export default {
         }
     },
     mounted() {
-        this.getAllTransection();
-        this.getMonthTarget();
+        if(localStorage.getItem("id")) {
+            this.getAllTransection();
+            this.getMonthTarget();
+        } else {
+            window.location.href = '/';
+        }
     },
 };
 </script>

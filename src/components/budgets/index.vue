@@ -78,7 +78,7 @@ export default {
         return {
             list: [],
             loading: true,
-            user_id: '62b88f52d21490416a74fc91',
+            user_id: localStorage.getItem("id"),
             target_ammount: '',
             month: 0,
             months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -97,26 +97,6 @@ export default {
         async deleteData (amount, month) {
             this.target_ammount = amount;
             this.month = month
-
-            // try {
-            //     this.$swal.fire({
-            //     icon: 'warning',
-            //     title: 'Delete',
-            //     text: 'Are you sure delete the budget limit?',
-            //     showCancelButton: true,
-            //     confirmButtonText: 'Delete',
-            //     }).then(async (result) => {
-            //         if (result.isConfirmed) {
-            //             this.loading = true;
-            //             let that = this;
-            //             await axios.delete(`https://my-cash-app.herokuapp.com/loan/${id}`);
-            //             that.getLimitData();
-            //         }
-            //     })
-            // } catch {
-            //     this.loading = false;
-            //     this.errorMessage('Somethings went wrong!')
-            // }
         },
         async submitData () {
           try {
@@ -172,10 +152,14 @@ export default {
         }
     },
     mounted() {
-        this.getLimitData();
-        const d = new Date();
-        let month = d.getMonth() + 1;
-        this.month = month;
+        if (localStorage.getItem("id")) {
+            this.getLimitData();
+            const d = new Date();
+            let month = d.getMonth() + 1;
+            this.month = month;
+        } else {
+            window.location.href = '/';
+        }
     }
 }
 </script>

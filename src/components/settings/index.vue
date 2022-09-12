@@ -2,73 +2,181 @@
     <div class="text">
         <NavBar></NavBar>
         <div style="display:flex" @click="settings = !settings">
-            <h2 v-if="settings" style="font-size:1.5rem ; font-weight: 700; margin-left: 10px; color: #FF7519;"> Borrower Settings
+            <h2 v-if="settings" style="font-size:1.5rem ; font-weight: 700; margin-left: 10px; color: #FF7519;">
+                Go to Borrower Settings
                 <i style="font-size: large;" class="glyphicon glyphicon-arrow-right"></i>
             </h2>
-            <h2 v-else style="font-size:1.5rem ; font-weight: 700; margin-left: 10px; color: #FF7519;"> 
+            <h2 v-else style="font-size:1.5rem ; font-weight: 700; margin-left: 10px; color: #FF7519;">
                 <i style="font-size: large;" class="glyphicon glyphicon-arrow-left"></i>
-                Transaction Settings
+                Go to Transaction Settings
             </h2>
         </div>
-        <article v-if="settings" class="leaderboard">
-            <div style="display:flex">
-                <h2 style="font-size:1.5rem ; font-weight: 700; margin-left: 10px;">Purpose list of your transaction</h2>
-                <button style="    margin-left: 92px;" class="plus-button" @click="deleteBudget(item)">
-                    <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
-                </button>
-            </div>
-            <main class="leaderboard__profiles">
-                <article class="leaderboard__profile">
-                    <img src="./profile.png" alt="Mark Zuckerberg" class="leaderboard__picture">
-                    <span class="leaderboard__name">Mark Zuckerberg</span>
-                    <span class="leaderboard__value">9.9<span>B</span></span>
-                </article>
-
-                <article class="leaderboard__profile">
-                    <img src="https://randomuser.me/api/portraits/men/97.jpg" alt="Dustin Moskovitz"
-                        class="leaderboard__picture">
-                    <span class="leaderboard__name">Dustin Moskovitz</span>
-                    <span class="leaderboard__value">
-                        <button style="border: none; background:white" @click="deleteBudget(item)"><i
-                                class="glyphicon glyphicon-trash"></i></button>
-                    </span>
-                </article>
-            </main>
-        </article>
-        <article v-else class="leaderboard">
-            <div style="display:flex">
-                <h2 style="font-size:1.5rem ; font-weight: 700; margin-left: 10px;">borrower's list</h2>
-                <button style="    margin-left: 212px;" class="plus-button" @click="deleteBudget(item)">
-                    <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
-                </button>
-            </div>
-            <main class="leaderboard__profiles">
-                <article class="leaderboard__profile">
-                    <img src="./profile.png" alt="Mark Zuckerberg" class="leaderboard__picture">
-                    <span class="leaderboard__name">Mark Zuckerberg</span>
-                    <span class="leaderboard__value">9.9<span>B</span></span>
-                </article>
-
-                <article class="leaderboard__profile">
-                    <img src="https://randomuser.me/api/portraits/men/97.jpg" alt="Dustin Moskovitz"
-                        class="leaderboard__picture">
-                    <span class="leaderboard__name">Dustin Moskovitz</span>
-                    <span class="leaderboard__value">
-                        <button style="border: none; background:white" @click="deleteBudget(item)"><i
-                                class="glyphicon glyphicon-trash"></i></button>
-                    </span>
-                </article>
-            </main>
-        </article>
+        <LoaderVue style="margin: 150px" v-if="loading" />
+        <div v-else>
+            <article v-if="settings" class="leaderboard">
+                <div style="display:flex">
+                    <!-- <h2 style="font-size:1.5rem ; font-weight: 700; margin-left: 10px;">Purpose list of your transaction
+                </h2> -->
+                    <input style="margin-left: 10px;" v-model="name" type="text" class="form-control my-form"
+                        placeholder="Amount">
+                    <button style="" class="plus-button" @click="addItem(name, 'cash')">
+                        <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
+                    </button>
+                </div>
+                <main class="leaderboard__profiles">
+                    <article v-if="cash.length > 0" v-for="(item, index) in cash" class="leaderboard__profile">
+                        <img src="./purpose.jpg" alt="Dustin Moskovitz" class="leaderboard__picture">
+                        <span class="leaderboard__name">{{ item.name }}</span>
+                        <span class="leaderboard__value">
+                            <button style="border: none; background:white" @click="deleteSettings(item._id)"><i
+                                    class="glyphicon glyphicon-trash"></i></button>
+                        </span>
+                    </article>
+                    <article v-else class="leaderboard__profile">
+                        <span></span>
+                        <span class="leaderboard__name">There are no any purpose for transaction , please add</span>
+                    </article>
+                </main>
+            </article>
+            <article v-else class="leaderboard">
+                <div style="display:flex">
+                    <input style="margin-left: 10px;" v-model="purpose" type="text" class="form-control my-form"
+                        placeholder="Amount">
+                    <button class="plus-button" @click="addItem(purpose, 'loan')">
+                        <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
+                    </button>
+                </div>
+                <main class="leaderboard__profiles">
+                    <article v-if="loan.length > 0" v-for="(item, index) in loan" class="leaderboard__profile">
+                        <img src="./profile.png" alt="Dustin Moskovitz" class="leaderboard__picture">
+                        <span class="leaderboard__name">{{ item.name }}</span>
+                        <span class="leaderboard__value">
+                            <button style="border: none; background:white" @click="deleteSettings(item._id)"><i
+                                    class="glyphicon glyphicon-trash"></i></button>
+                        </span>
+                    </article>
+                    <article v-else class="leaderboard__profile">
+                        <span></span>
+                        <span class="leaderboard__name">There are no any borrower for borrow , please add</span>
+                    </article>
+                </main>
+            </article>
+        </div>
     </div>
 </template>
 <script>
+import axios from 'axios';
+import LoaderVue from '../common/Loader.vue';
 import NavBar from '../common/NavBar.vue';
+
 export default {
-    components: { NavBar },
-    data () {
+    components: { NavBar, LoaderVue },
+    data() {
         return {
-            settings: true
+            settings: true,
+            user_id: localStorage.getItem("id"),
+            loading: true,
+            cash: [],
+            loan: [],
+            name: '',
+            purpose: ''
+        }
+    },
+    methods: {
+        prepareData(data, that) {
+            let loandata = [];
+            let transaction = [];
+            data?.map(item => {
+                if (item?.slug === "cash") {
+                    transaction.push(item);
+                } else if (item?.slug === "loan") {
+                    loandata.push(item);
+                }
+            })
+            that.loan = loandata;
+            that.cash = transaction;
+        },
+        errorMessage(message = 'All fields are required!') {
+            this.$swal.fire(
+                {
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: message,
+                }
+            );
+        },
+        async deleteSettings(data) {
+            this.$swal.fire({
+                icon: 'warning',
+                title: 'Delete',
+                text: 'Are you sure delete the settings?',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+            }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    this.loading = true;
+                    let res = await axios.delete(`https://my-cash-app.herokuapp.com/category/${data}`);
+                    if (res?.data?.message) {
+                        this.loading = false;
+                        this.getSettings();
+                    } else {
+                        this.$swal.fire(
+                            {
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            }
+                        );
+                    }
+                }
+            })
+        },
+        async addItem(name, slug) {
+            let that = this;
+            this.loading = true;
+            try {
+                if (name === '' || slug === '') {
+                    this.errorMessage();
+                    this.loading = false;
+                } else {
+                    const data = {
+                        name: name.toLowerCase(), slug, user_id: this.user_id
+                    }
+                    await axios.post("https://my-cash-app.herokuapp.com/category", data);
+                    that.getSettings();
+                }
+            } catch {
+                this.loading = false;
+            }
+        },
+        async getSettings() {
+            this.loading = true;
+            let that = this;
+            try {
+                await axios.get(`https://my-cash-app.herokuapp.com/category/${this.user_id}`)
+                    .then(async function (response) {
+                        response?.data && (
+                            that.prepareData(response?.data.reverse(), that)
+                        )
+                        that.loading = false;
+                    }).catch(function (error) {
+                        // handle error
+                        that.loading = false;
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+            } catch {
+                this.loading = false;
+            }
+        }
+    },
+    mounted() {
+        if (localStorage.getItem("id")) {
+            this.getSettings()
+        } else {
+            window.location.href = '/';
         }
     }
 }
@@ -80,6 +188,7 @@ export default {
     width: 95%;
     border-radius: 12px;
     margin-top: 24px;
+    margin-bottom: 100px;
 }
 
 .leaderboard__profiles {
@@ -119,7 +228,7 @@ export default {
     font-weight: 600;
     font-size: 20px;
     letter-spacing: 0.64px;
-    margin-left: 12px;
+    margin: 0 auto
 }
 
 .leaderboard__value {
@@ -154,9 +263,17 @@ body {
     background: white;
     width: 50px;
     height: 50px;
+    margin-top: 19px;
 }
+
 .text {
     margin: 0 auto;
     max-width: 400px;
+}
+
+.glyphicon-plus:before {
+    content: "\002b";
+    margin-left: -28px;
+    font-size: 33px;
 }
 </style>

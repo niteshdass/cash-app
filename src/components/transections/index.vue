@@ -140,7 +140,7 @@ export default {
             budget_type: '',
             date: this.formatDate(),
             note: '',
-            user_id: '62b88f52d21490416a74fc91',
+            user_id: localStorage.getItem("id"),
             purpose_data: []
         };
     },
@@ -194,7 +194,7 @@ export default {
         },
         filterHandler() {
             if (this.filter.year === 'total') {
-                let url = `https://my-cash-app.herokuapp.com/budget/62b88f52d21490416a74fc91`;
+                let url = `https://my-cash-app.herokuapp.com/budget/${this.user_id}`;
                 this.getAllTransection(url);
                 return;
             }
@@ -202,7 +202,7 @@ export default {
             let year = parseInt(this.filter.year, 10);
 
             if (month > 0 && year > 0) {
-                let url = `https://my-cash-app.herokuapp.com/budget/month/62b88f52d21490416a74fc91/${month}/${year}`;
+                let url = `https://my-cash-app.herokuapp.com/budget/month/${this.user_id}/${month}/${year}`;
                 this.getAllTransection(url)
             }
         },
@@ -243,7 +243,7 @@ export default {
                 budget_type: this.budget_type,
                 date: this.date,
                 note: this.note,
-                user_id: '62b88f52d21490416a74fc91',
+                user_id: this.user_id,
                 month,
                 year
             }
@@ -316,8 +316,12 @@ export default {
         }
     },
     mounted() {
-        this.getAllTransection();
-        this.getPurpose()
+        if (localStorage.getItem("id")) {
+            this.getAllTransection();
+            this.getPurpose()
+        } else {
+            window.location.href = '/';
+        }
     },
 };
 </script>

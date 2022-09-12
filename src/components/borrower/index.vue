@@ -101,7 +101,7 @@ export default {
     components: { BarChart, NavBar, PieChart, Loader },
     data() {
         return {
-            userId: '62b88f52d21490416a74fc91',
+            userId: localStorage.getItem("id"),
             borrower_total: 0,
             lender_total: 0,
             loading: true,
@@ -271,8 +271,12 @@ export default {
         }
     },
     mounted() {
-        this.getLoan();
-        this.getBorrower();
+        if (localStorage.getItem("id")) {
+            this.getLoan();
+            this.getBorrower();
+        } else {
+            window.location.href = '/';
+        }
     },
 };
 </script>

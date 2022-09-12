@@ -5,12 +5,24 @@ import Transaction from '../components/transections/index.vue'
 import Borrower from '../components/borrower/index.vue'
 import Budget from '../components/budgets/index.vue'
 import Settings from '../components/settings/index.vue'
+import Login from '../components/auth/login.vue'
+import Register from '../components/auth/register.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   },
   {
     path: '/transactions',

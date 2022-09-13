@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" style="max-width: 400px; margin: 0 auto">
         <h2 style="font-size:2.5rem ; font-weight: 700;">Login</h2>
 
         <div style="margin-top: 100px">
@@ -35,7 +35,7 @@ export default {
                     if (result) {
                         let user = result?.data?.user
                         localStorage.setItem("id",user?._id);
-                        window.location.href = '/home';
+                        this.$router.push('/home');
                     }
                     that.loading = false;
                 } catch {
@@ -53,7 +53,12 @@ export default {
             );
             this.loading = false;
         },
-    }
+    },
+    mounted() {
+        if (localStorage.getItem("id")) {
+            this.$router.push('/home');
+        }
+    },
 }
 
 </script>

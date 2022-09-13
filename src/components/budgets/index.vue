@@ -158,7 +158,7 @@ export default {
             let month = d.getMonth() + 1;
             this.month = month;
         } else {
-            window.location.href = '/';
+            this.$router.push('/');
         }
     }
 }

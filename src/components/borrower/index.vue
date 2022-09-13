@@ -284,7 +284,7 @@ export default {
             this.getLoan();
             this.getBorrower();
         } else {
-            window.location.href = '/';
+            this.$router.push('/');
         }
     },
 };

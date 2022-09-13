@@ -178,7 +178,7 @@ export default {
         if (localStorage.getItem("id")) {
             this.getSettings()
         } else {
-            window.location.href = '/';
+            this.$router.push('/');
         }
     }
 }

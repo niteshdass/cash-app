@@ -241,7 +241,7 @@ export default {
             this.getAllTransection();
             this.getMonthTarget();
         } else {
-            window.location.href = '/';
+            this.$router.push('/');
         }
     },
 };

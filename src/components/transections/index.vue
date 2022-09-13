@@ -329,7 +329,7 @@ export default {
             this.getAllTransection();
             this.getPurpose()
         } else {
-            window.location.href = '/';
+            this.$router.push('/');
         }
     },
 };

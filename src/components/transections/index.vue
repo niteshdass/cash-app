@@ -71,6 +71,15 @@
                     </div>
                 </section>
             </article>
+            <article v-if="purpose_data?.length === 0 && loading === false" class="">
+                <section class="list">
+                    <div >
+                        <h4 style="color:#FF7519">There are no transaction purpose listed yet. 
+                            please go to <router-link to="/settings">Settings</router-link> page and add
+                            purpose list of your transaction.</h4>
+                    </div>
+                </section>
+            </article>
             <div class="modal" id="myModal" style="border-radius: 10px">
                 <div class="modal-dialog">
                     <div class="modal-content">

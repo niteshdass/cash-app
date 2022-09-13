@@ -39,6 +39,16 @@
                             class='bx bx-x-circle' style="font-size:4rem ; color: #FF7519"></i></button>
                 </div>
             </div>
+            <article v-if="limit === 0 && loading === false" class="">
+                <section class="list">
+                    <div>
+                        <h4 style="color:#FF7519">You do not listed yet any limit amount of your
+                            transaction for this month. so please go to <router-link to="/budgets">Budgets</router-link>
+                            page and listing
+                            transaction limit amount for this month at first.</h4>
+                    </div>
+                </section>
+            </article>
             <div style="margin: 135px" v-if="loading">
                 <Loader />
             </div>
@@ -46,7 +56,10 @@
                 <h2 style="font-size:1.5rem ; font-weight: 700;">Expenses summary</h2>
                 <Pie v-if="data.length" :data="data" :labels="labels" />
                 <div v-else>
-                    <h5 style="color:#FF7519; font-weight:800; padding: 50px;">There are no expense's data!</h5>
+                    <h5 style="color:#FF7519; font-weight:800; padding: 50px;">You have not any transaction yet
+                        . Please go <router-link to="/transactions">Transaction</router-link> page and make a
+                        transaction.
+                    </h5>
                 </div>
                 <!-- <PieChart v-if="data.length" :data="data" :labels="labels" /> -->
                 <h2 style="font-size:1.5rem ; font-weight: 700;">Income | Expense | Savings</h2>
@@ -62,10 +75,12 @@
             <p v-if="limit < expenseAmount " class="first">Expensive</p>
             <p v-else class="first">Cheep</p>
             <p class="second">
-                <span v-if="perDayCost > 0">You have to cost per day <span style="color:#FF7519">{{perDayCost}}</span> tk </span>
+                <span v-if="perDayCost > 0">You have to cost per day <span style="color:#FF7519">{{perDayCost}}</span>
+                    tk </span>
                 <span v-else> You alraedy cross your limit</span>
                 <br />
-                <b>N.B: Your have limt of spenting <span style="color:#FF7519">{{limit}} </span> tk but you have already spent <span style="color:#FF7519">{{ expenseAmount }}</span> tk</b>
+                <b>N.B: Your have limt of spenting <span style="color:#FF7519">{{limit}} </span> tk but you have already
+                    spent <span style="color:#FF7519">{{ expenseAmount }}</span> tk</b>
             </p>
         </div>
     </div>
@@ -102,15 +117,18 @@ export default {
                 'silver', 'teal', 'white', 'yellow']
         };
     },
-    watch : {
-        limit (newLimit, oldQuestion) {
+    watch: {
+        limit(newLimit, oldQuestion) {
             let d = new Date();
             let days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-                    let rest_date = days - d.getDate();
-                   setTimeout(() => {
-                    let targetAvg = (newLimit - this.expenseAmount)/rest_date;
-                    this.perDayCost = Math.trunc(targetAvg);
-                   }, 1000)
+            let rest_date = days - d.getDate();
+            setTimeout(() => {
+                let targetAvg = (newLimit - this.expenseAmount) / rest_date;
+                this.perDayCost = Math.trunc(targetAvg);
+            }, 1000)
+        },
+        filterRender(newData, old) {
+            this.getMonthTarget();
         }
     },
     methods: {
@@ -156,10 +174,6 @@ export default {
                     }, 0);
                     labels.push(data[i].purpose);
                     amount.push(sum)
-                    // output.push({
-                    //     name: data[i].purpose, amount: sum, legendFontColor: this.colorArray[i],
-                    //     legendFontSize: 12, color: this.colorArray[i]
-                    // });
                 } else {
                     cTotal = cTotal + data[i]?.amount;
                     if (flags[data[i].purpose]) continue;
@@ -223,7 +237,7 @@ export default {
         }
     },
     mounted() {
-        if(localStorage.getItem("id")) {
+        if (localStorage.getItem("id")) {
             this.getAllTransection();
             this.getMonthTarget();
         } else {
@@ -265,55 +279,55 @@ select:focus {
 
 
 .notes {
-  width: 100%;
-  height: 150px;
-  background-color: #f1f1f1;
-  padding: 20px;
-  margin: 50px auto;
-  border: 1px solid #ddd;
-  text-align: center;
-  box-shadow: 5px 5px 10px #ddd inset, -5px -5px 10px #ddd inset;
+    width: 100%;
+    height: 150px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    margin: 50px auto;
+    border: 1px solid #ddd;
+    text-align: center;
+    box-shadow: 5px 5px 10px #ddd inset, -5px -5px 10px #ddd inset;
 }
 
 .first {
-  background-color: #FF7519;
-  position: relative;
-  left: -40px;
-  color: #fff;
-  font-weight: bold;
+    background-color: #FF7519;
+    position: relative;
+    left: -40px;
+    color: #fff;
+    font-weight: bold;
 }
 
 .first {
-  width: 300px;
-  padding: 10px 0;
-  font-size: 20px;
+    width: 300px;
+    padding: 10px 0;
+    font-size: 20px;
 }
 
 .first::after {
-  content: "";
-  height: 100%;
-  width: 10px;
-  position: absolute;
-  right: -6px;
-  top: 0;
-  background-color: #2e1606;
-  transform: skew(10deg);
+    content: "";
+    height: 100%;
+    width: 10px;
+    position: absolute;
+    right: -6px;
+    top: 0;
+    background-color: #2e1606;
+    transform: skew(10deg);
 }
 
 .first::before {
-  content: "";
-  border: 10px solid;
-  border-color: #2e1606 #2e1606 transparent transparent;
-  position: absolute;
-  left: 0;
-  bottom: -20px;
+    content: "";
+    border: 10px solid;
+    border-color: #2e1606 #2e1606 transparent transparent;
+    position: absolute;
+    left: 0;
+    bottom: -20px;
 }
 
 
 .second {
-  line-height: 1.6;
-  font-size: 14px;
-  font-style: italic;
-  color: #444;
+    line-height: 1.6;
+    font-size: 14px;
+    font-style: italic;
+    color: #444;
 }
 </style>

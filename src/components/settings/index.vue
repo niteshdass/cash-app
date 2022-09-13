@@ -18,7 +18,7 @@
                     <!-- <h2 style="font-size:1.5rem ; font-weight: 700; margin-left: 10px;">Purpose list of your transaction
                 </h2> -->
                     <input style="margin-left: 10px;" v-model="name" type="text" class="form-control my-form"
-                        placeholder="Amount">
+                        placeholder="Purpose Ex:Mess, personal">
                     <button style="" class="plus-button" @click="addItem(name, 'cash')">
                         <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
                     </button>
@@ -32,16 +32,17 @@
                                     class="glyphicon glyphicon-trash"></i></button>
                         </span>
                     </article>
-                    <article v-else class="leaderboard__profile">
-                        <span></span>
-                        <span class="leaderboard__name">There are no any purpose for transaction , please add</span>
-                    </article>
+                    <div v-else class="">
+                        <h2 style="font-size:1.5rem ; font-weight: 700; color:midnightblue">
+                            There are no any purpose for transaction , please add
+                        </h2>
+                    </div>
                 </main>
             </article>
             <article v-else class="leaderboard">
                 <div style="display:flex">
                     <input style="margin-left: 10px;" v-model="purpose" type="text" class="form-control my-form"
-                        placeholder="Amount">
+                        placeholder="Borrower name; Ex: Jhon, Smith">
                     <button class="plus-button" @click="addItem(purpose, 'loan')">
                         <i style="font-size: large;" class="glyphicon glyphicon-plus"></i>
                     </button>
@@ -55,10 +56,11 @@
                                     class="glyphicon glyphicon-trash"></i></button>
                         </span>
                     </article>
-                    <article v-else class="leaderboard__profile">
-                        <span></span>
-                        <span class="leaderboard__name">There are no any borrower for borrow , please add</span>
-                    </article>
+                    <div v-else class="">
+                        <h2 style="font-size:1.5rem ; font-weight: 700; color:midnightblue">
+                            There are no any borrower for borrow , please add
+                        </h2>
+                    </div>
                 </main>
             </article>
         </div>
@@ -96,7 +98,7 @@ export default {
             that.loan = loandata;
             that.cash = transaction;
         },
-        errorMessage(message = 'All fields are required!') {
+        errorMessage(message = 'Title is required!') {
             this.$swal.fire(
                 {
                     icon: 'error',

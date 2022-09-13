@@ -50,6 +50,15 @@
                     </div>
                 </section>
             </article>
+            <article v-if="user?.length === 0" class="">
+                <section class="list">
+                    <div >
+                        <h4 style="color:#FF7519">There are no borrower listed yet. 
+                            please go to <router-link to="/settings">Settings</router-link> page and listing
+                            borrower</h4>
+                    </div>
+                </section>
+            </article>
             <div class="modal" id="myModal" style="border-radius: 10px">
                 <div class="modal-dialog">
                     <div class="modal-content">

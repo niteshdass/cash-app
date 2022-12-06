@@ -118,7 +118,7 @@ export default {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     this.loading = true;
-                    let res = await axios.delete(`https://my-cash-app.herokuapp.com/category/${data}`);
+                    let res = await axios.delete(`https://my-cash-backend.vercel.app/category/${data}`);
                     if (res?.data?.message) {
                         this.loading = false;
                         this.getSettings();
@@ -145,7 +145,7 @@ export default {
                     const data = {
                         name: name.toLowerCase(), slug, user_id: this.user_id
                     }
-                    await axios.post("https://my-cash-app.herokuapp.com/category", data);
+                    await axios.post("https://my-cash-backend.vercel.app/category", data);
                     that.getSettings();
                 }
             } catch {
@@ -156,7 +156,7 @@ export default {
             this.loading = true;
             let that = this;
             try {
-                await axios.get(`https://my-cash-app.herokuapp.com/category/${this.user_id}`)
+                await axios.get(`https://my-cash-backend.vercel.app/category/${this.user_id}`)
                     .then(async function (response) {
                         response?.data && (
                             that.prepareData(response?.data.reverse(), that)

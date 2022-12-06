@@ -112,7 +112,7 @@ export default {
                 year,
                 user_id: this.user_id
             }
-            const result = await axios.post("https://my-cash-app.herokuapp.com/target/", target);
+            const result = await axios.post("https://my-cash-backend.vercel.app/target/", target);
             if (result) {
                 that.loading = false;
                 this.target_ammount = '';
@@ -135,7 +135,7 @@ export default {
             try {
                 let that = this;
                 this.loading = true;
-                await axios.get(`https://my-cash-app.herokuapp.com/target/${this.user_id}`)
+                await axios.get(`https://my-cash-backend.vercel.app/target/${this.user_id}`)
                     .then(async function (response) {
                         that.loading = false;
                         that.list = response?.data;

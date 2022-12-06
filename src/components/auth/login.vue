@@ -31,7 +31,7 @@ export default {
             } else {
                 const data = { email: this.gmail, password: this.password }
                 try {
-                    const result = await axios.post("https://my-cash-app.herokuapp.com/api/signin", data);
+                    const result = await axios.post("https://my-cash-backend.vercel.app/api/signin", data);
                     if (result) {
                         let user = result?.data?.user
                         localStorage.setItem("id",user?._id);

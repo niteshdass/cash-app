@@ -187,7 +187,7 @@ export default {
         async getPurpose() {
             this.loading = true;
             let that = this;
-            await axios.get(`https://my-cash-app.herokuapp.com/category/${this.user_id}`)
+            await axios.get(`https://my-cash-backend.vercel.app/category/${this.user_id}`)
                 .then(async function (response) {
                     response?.data && (
                         that.prepareCategoryData(response?.data, that)
@@ -203,7 +203,7 @@ export default {
         },
         filterHandler() {
             if (this.filter.year === 'total') {
-                let url = `https://my-cash-app.herokuapp.com/budget/${this.user_id}`;
+                let url = `https://my-cash-backend.vercel.app/budget/${this.user_id}`;
                 this.getAllTransection(url);
                 return;
             }
@@ -211,7 +211,7 @@ export default {
             let year = parseInt(this.filter.year, 10);
 
             if (month > 0 && year > 0) {
-                let url = `https://my-cash-app.herokuapp.com/budget/month/${this.user_id}/${month}/${year}`;
+                let url = `https://my-cash-backend.vercel.app/budget/month/${this.user_id}/${month}/${year}`;
                 this.getAllTransection(url)
             }
         },
@@ -226,7 +226,7 @@ export default {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     this.loading = true;
-                    let res = await axios.delete(`https://my-cash-app.herokuapp.com/budget/${data._id}`);
+                    let res = await axios.delete(`https://my-cash-backend.vercel.app/budget/${data._id}`);
                     if (res?.data?.message) {
                         this.loading = false;
                         this.getAllTransection();
@@ -259,7 +259,7 @@ export default {
             try {
                 if (this.amount && this.purpose && this.budget_type && this.note) {
                     this.loading = true;
-                    const result = await axios.post("https://my-cash-app.herokuapp.com/budget/create", budget);
+                    const result = await axios.post("https://my-cash-backend.vercel.app/budget/create", budget);
                     if (result) {
                         this.loading = false;
                         // this.successMessage('Transaction', 'Transaction add successfully')
@@ -309,7 +309,7 @@ export default {
 
             let that = this;
             that.loading = true;
-            let url = customUrl.length > 1 ? customUrl : `https://my-cash-app.herokuapp.com/budget/month/${this.user_id}/${month}/${year}`;
+            let url = customUrl.length > 1 ? customUrl : `https://my-cash-backend.vercel.app/budget/month/${this.user_id}/${month}/${year}`;
             await axios.get(url)
                 .then(async function (response) {
                     that.data = response.data.reverse();

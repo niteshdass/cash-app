@@ -49,7 +49,7 @@ export default {
             if (this.passError === '' || this.gmailError === '' || this.nameError === '') {
                 const data = { email: this.gmail, password: this.password, name: this.name }
                 try {
-                    const result = await axios.post("https://my-cash-app.herokuapp.com/api/signup", data);
+                    const result = await axios.post("https://my-cash-backend.vercel.app/api/signup", data);
                     if (result) {
                         let user = result?.data?.user
                         localStorage.setItem("id", user?._id);

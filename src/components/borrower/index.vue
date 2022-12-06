@@ -135,7 +135,7 @@ export default {
                     if (result.isConfirmed) {
                         this.loading = true;
                         let that = this;
-                        await axios.delete(`https://my-cash-app.herokuapp.com/loan/${id}`);
+                        await axios.delete(`https://my-cash-backend.vercel.app/loan/${id}`);
                         that.getLoan();
                     }
                 })
@@ -176,7 +176,7 @@ export default {
                     try {
                         this.loading = true;
                         let that = this;
-                        const result = await axios.post("https://my-cash-app.herokuapp.com/loan/", budget);
+                        const result = await axios.post("https://my-cash-backend.vercel.app/loan/", budget);
                         if (result) {
                             this.getLoan();
                         }
@@ -236,7 +236,7 @@ export default {
         async getLoan() {
             this.loading = true;
             let that = this;
-            await axios.get(`https://my-cash-app.herokuapp.com/loan/${this.userId}`)
+            await axios.get(`https://my-cash-backend.vercel.app/loan/${this.userId}`)
                 .then((response) => {
                     if (response?.data?.length) {
                         this.calculationLoan(response?.data?.reverse(), that)
@@ -264,7 +264,7 @@ export default {
         async getBorrower() {
             this.loading = true;
             let that = this;
-            await axios.get(`https://my-cash-app.herokuapp.com/category/${this.userId}`)
+            await axios.get(`https://my-cash-backend.vercel.app/category/${this.userId}`)
                 .then(async function (response) {
                     response?.data && (
                         that.prepareCategoryData(response?.data, that)

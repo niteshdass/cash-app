@@ -134,20 +134,20 @@ export default {
     methods: {
         filterHandler() {
             if (this.filter.year === 'total') {
-                let url = `https://my-cash-app.herokuapp.com/budget/${this.userId}/`;
+                let url = `https://my-cash-backend.vercel.app/budget/${this.userId}/`;
                 this.getAllTransection(url);
                 this.getMonthTarget(
-                    `https://my-cash-app.herokuapp.com/target/${this.userId}`
+                    `https://my-cash-backend.vercel.app/target/${this.userId}`
                 )
                 return;
             }
             let month = parseInt(this.filter.month, 10);
             let year = parseInt(this.filter.year, 10);
             if (month > 0 && year > 0) {
-                let url = `https://my-cash-app.herokuapp.com/budget/month/${this.userId}/${month}/${year}`;
+                let url = `https://my-cash-backend.vercel.app/budget/month/${this.userId}/${month}/${year}`;
                 this.getAllTransection(url)
                 this.getMonthTarget(
-                    `https://my-cash-app.herokuapp.com/target/${this.userId}/${month}/${year}`
+                    `https://my-cash-backend.vercel.app/target/${this.userId}/${month}/${year}`
                 )
             }
         },
@@ -201,7 +201,7 @@ export default {
 
             let that = this;
             that.loading = true;
-            let url = customUrl.length > 1 ? customUrl : `https://my-cash-app.herokuapp.com/budget/month/${this.userId}/${month}/${year}`;
+            let url = customUrl.length > 1 ? customUrl : `https://my-cash-backend.vercel.app/budget/month/${this.userId}/${month}/${year}`;
             await axios.get(url)
                 .then(async function (response) {
                     that.prepareAllTransactionData(response.data.reverse());
@@ -219,7 +219,7 @@ export default {
             let year = d.getFullYear();
             let month = d.getMonth() + 1;
             let that = this;
-            url = url.length ? url : `https://my-cash-app.herokuapp.com/target/${this.userId}/${month}/${year}`;
+            url = url.length ? url : `https://my-cash-backend.vercel.app/target/${this.userId}/${month}/${year}`;
             // We have data!!
             await axios.get(url)
                 .then(async function (response) {
